@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Welcome</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script>
+      $.ajax({
+            url: "http://localhost:5000/productlist",
+            cache: false,
+        method:get,
+    )}
+    </script> -->
+    <style>
+      .mar {
+        margin-top: 20px;
+        margin-left: 90px;
+      }
+      .carousel-inner{
+        height: 500px;
+      }
+      .imageStyle{
+      height: 300px;
+    }
+      
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle"
+            data-toggle="collapse"
+            data-target="#myNavbar"
+          >
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Avengers Assemble</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="viewProd.html">
+                View Products
+              </a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="cart.html">
+                <span class="glyphicon glyphicon-shopping-cart"></span>
+                Cart
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <h1 class="alert alert-success"><b><center>Suggest Recipe</b></center></h1>
+    <div class="container">
+      <h2>Recipes</h2> 
+      <div id="viewRecipe">
+          <script>
+            
+            $(document).ready(function(){
+            
+                jQuery.support.cors = true;
+            
+                $.ajax(
+                {
+                    type: "GET",
+                    url: "http://localhost:5000/getothers",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    headers: {
+                      'Access-Control-Allow-Origin': '*'
+                    },
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                     console.log(data);
+                     c=0
+                     for(i in data){
+
+                      $('#viewRecipe').append(`<div id="${c}rec"><h3>${i}</h3></div>`);
+                      $(`#${c}rec`).append(`<table class="table table-striped" id="${c}ingrd">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                        </tr>
+                        </thead>
+                    <tbody>`
+                    )
+                      for(var j=0;j<10;j++){
+                      $(`#${c}ingrd`).append(`<tr><td>  ${data[i][j].id}  </td><td>  ${data[i][j].name}  </td>
+                        <td><button type="button" class="btn btn-success" data-id="${data[i][j].id}" id="${data[i][j].id}"  > Add to Cart</button></td>
+                        </tr>`);
+                    
+                    }
+                    c=c+1
+                    }
+                    }
+                });
+
+                $(document).on('click','button[data-id]',function(e){    
+                    var productid=$(this).attr('data-id');                
+               // var productid = document.getElementById("addtocart").value;
+                console.log(productid)
+                    var data={
+                        'id':productid
+                    }
+                $.ajax({
+                       type:"POST",
+                       url:"http://localhost:5000/addtocart",
+                       cache:false,
+                       data: JSON.stringify(data, null, '\t'),
+                       contentType: 'application/json;charset=UTF-8',
+                       success:function(result){
+                        //    alert('ok');
+                        var row = document.getElementById(productid);
+                        row.parentNode.removeChild(row);
+                       },
+                       error:function(result){
+                           alert('error');
+                       }
+                   }) ;
+
+            });
+            })
+            </script>
+        </tbody>
+      </table>
+    </div>
+<br><br><br>
+  </body>
+</html>
